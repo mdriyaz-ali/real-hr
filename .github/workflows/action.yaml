@@ -39,10 +39,10 @@ jobs:
               password: ${{ secrets.DOCKER_PASSWORD }}
           
           - name: Pull docker image
-            run: docker pull itsbijaya/real-hr:latest .
+            run: docker pull itsbijaya/real-hr:latest 
 
-          - name: Build Docker Image
-            run: docker build -t itsbijaya/real-hr:latest 
-            
+         #- name: Build Docker Image
+         #  run: docker build -t itsbijaya/real-hr:latest .
+
           - name: Build Docker Image
             run: docker run -d -d 8085:80 --name real-hr itsbijaya/real-hr:latest 
