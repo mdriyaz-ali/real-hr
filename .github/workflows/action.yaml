@@ -1,11 +1,17 @@
 name: Build Docker Image and Push
 
 on:
-    [workflow_dispatch]
+    
+  push: 
+    branches: ['main']
+
+  workflow_dispatch:
+
+
 
 jobs:
        build:
-        runs-on: nginx:alpine
+        runs-on: ubuntu-latest
 
         steps:
           - name: Check out the repo
