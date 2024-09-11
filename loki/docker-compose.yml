@@ -1,0 +1,31 @@
+version: "3"
+
+networks:    
+     loki:
+         driver: bridge
+
+services:
+  loki:
+    container_name: loki_log_monitor
+    image: grafana/loki:2.9.2
+    restart: always
+    volumes:
+      - /home/build/loki/local-config.yml:/etc/loki/local-config.yaml
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    networks:
+      - loki
+
+  promtail:
+    container_name: promtail_log_monitor
+    restart: always
+    image: grafana/promtail:2.9.2
+    volumes:
+      - ./config.yml:/etc/promtail/config.yml
+      - /var/log:/var/sys_log
+      - /home/build/logs:/var/app_log  
+    command: -config.file=/etc/promtail/config.yml
+    networks:
+      - loki
+
