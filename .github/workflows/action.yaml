@@ -1,4 +1,4 @@
-name: Deploy to Remote Server
+name: Test SSH Connectivity
 
 on:
   push:
@@ -6,20 +6,20 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy:
+  test-ssh:
     runs-on: ubuntu-latest
 
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4
 
-      - name: Deploy to Remote Server
+      - name: Test SSH Connectivity
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.SSHKEY }}
+          host: ${{ secrets.HOST }}         # Replace with your server's IP or hostname
+          username: ${{ secrets.USERNAME }} # Replace with your SSH username
+          key: ${{ secrets.SSHKEY }}         # Replace with your private SSH key
           script: |
-            echo "Deploying application..."
-            # Add your deployment commands here
-          timeout: 30m  # Set timeout with unit (e.g., 30 minutes)
+            echo "SSH connection successful"
+            # Optionally, run other commands to further test the connection
+          debug: true # Enable debug mode for more detailed logs
