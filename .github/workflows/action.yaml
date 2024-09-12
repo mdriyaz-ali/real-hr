@@ -16,7 +16,7 @@ jobs:
       - name: Test SSH Connectivity
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ secrets.PUBLIC_SERVER_IP }}  # Use the public IP here
+          host: ${{ secrets.HOST }}  # Use the public IP here
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSHKEY }}
           script: |
