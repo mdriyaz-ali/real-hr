@@ -37,7 +37,17 @@ jobs:
               dockerfile: Dockerfile
               username: ${{ secrets.DOCKER_USERNAME }}
               password: ${{ secrets.DOCKER_PASSWORD }}
-          
+
+          - name: Install SSH key
+            uses: shimataro/ssh-key-action@v2
+            with:
+              key: ${{ secrets.SSHKEY }}
+              known_hosts: ${{ secrets.HOST }}
+              if_key_exists: fail # replace / ignore / fail; optional (defaults to fail)
+          - name: Run Docker 
+            run: docker pull itsbijaya/real-hr:latest && docker run -d -p 8085:80 --name real-hr itsbijaya/real-hr:latest
+
+            
           - name: Start SSH
             uses: appleboy/ssh-action@v1.0.3
             with:
