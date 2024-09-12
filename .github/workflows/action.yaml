@@ -40,7 +40,8 @@ jobs:
 
           - name: Verify SSH connection
             run: |
-                  ssh run: ssh -o StrictHostKeyChecking=no ${SECRETS.USERNAME}@${{ secrets.HOST }} exit-o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} exit
+                   ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} exit
+
   
               
           - name: Deploy to remote server
@@ -59,5 +60,5 @@ jobs:
                 debug: true
   
           - name: Test SSH connectivity
-            run: ssh -o StrictHostKeyChecking=no ${SECRETS.USERNAME}@${{ secrets.HOST }} exit
+            run: ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} exit
   
