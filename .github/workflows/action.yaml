@@ -13,12 +13,17 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v4
 
+      - name: Verify Server Reachability
+        run: |
+          echo "Checking if the server is reachable on port 22..."
+          nc -zv ${{ secrets.HOST }} 22 || exit 1
+
       - name: Test SSH Connectivity
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ secrets.HOST }}         # Replace with your server's IP or hostname
-          username: ${{ secrets.USERNAME }} # Replace with your SSH username
-          key: ${{ secrets.SSHKEY }}         # Replace with your private SSH key
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSHKEY }}
           script: |
             echo "SSH connection successful"
             # Optionally, run other commands to further test the connection
