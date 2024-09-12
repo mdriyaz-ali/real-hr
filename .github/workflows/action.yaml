@@ -47,4 +47,16 @@ jobs:
           - name: whoami
             run: whoami
 
-   
+            
+          - name: Deploy to remote server
+            uses: appleboy/ssh-action@v1.0.3
+            with:
+              host: ${{ secrets.HOST }}
+              username: ${{ secrets.USERNAME }}
+              key: ${{ secrets.SSHKEY }}
+              script: |
+                 # ... (rest of your script)
+                  timeout: 300  # Increase timeout to 5 minutes
+                  debug= true
+          - name: Test SSH connectivity
+            run: ssh -o StrictHostKeyChecking=no ${SECRETS.USERNAME}@${{ secrets.HOST }}
