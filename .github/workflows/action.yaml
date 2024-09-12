@@ -39,7 +39,8 @@ jobs:
               password: ${{ secrets.DOCKER_PASSWORD }}
 
           - name: Verify SSH connection
-            run: ssh -o StrictHostKeyChecking=no ${SECRETS.USERNAME}@${{ secrets.HOST }} exit
+            run: |
+                ssh run: ssh -o StrictHostKeyChecking=no ${SECRETS.USERNAME}@${{ secrets.HOST }} exit-o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} exit
 
             
           - name: Deploy to remote server
