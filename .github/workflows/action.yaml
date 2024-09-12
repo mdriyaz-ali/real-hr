@@ -22,4 +22,4 @@ jobs:
           script: |
             echo "Deploying application..."
             # Add your deployment commands here
-          timeout: 300
+          timeout: 30m  # Set timeout with unit (e.g., 30 minutes)
