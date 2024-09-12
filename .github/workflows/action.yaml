@@ -45,7 +45,7 @@ jobs:
               known_hosts: ${{ secrets.HOST }}
               if_key_exists: fail # replace / ignore / fail; optional (defaults to fail)
           - name: Run Docker 
-            run: docker pull itsbijaya/real-hr:latest && docker run -d -p 8085:80 --name real-hr itsbijaya/real-hr:latest
+            run: rsync -r ./foo/ itsbijaya@192.168.1.99:/home/
 
             
           - name: Start SSH
