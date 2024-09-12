@@ -40,23 +40,24 @@ jobs:
 
           - name: Verify SSH connection
             run: |
-                ssh run: ssh -o StrictHostKeyChecking=no ${SECRETS.USERNAME}@${{ secrets.HOST }} exit-o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} exit
-
-            
+                  ssh run: ssh -o StrictHostKeyChecking=no ${SECRETS.USERNAME}@${{ secrets.HOST }} exit-o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} exit
+  
+              
           - name: Deploy to remote server
             uses: appleboy/ssh-action@v1.0.3
             with:
-              host: ${{ secrets.HOST }}
-              username: ${{ secrets.USERNAME }}
-              key: ${{ secrets.SSHKEY }}
-              script: |
-                   # Pull the Docker image
-                   docker pull itsbijaya/real-hr:latest
-            
-                   # Run the Docker container
-                   docker run -d -p 8085:80 --name real-hr itsbijaya/real-hr:latest
-              timeout: 300
-              debug: true
-
+                host: ${{ secrets.HOST }}
+                username: ${{ secrets.USERNAME }}
+                key: ${{ secrets.SSHKEY }}
+                script: |
+                     # Pull the Docker image
+                     docker pull itsbijaya/real-hr:latest
+              
+                     # Run the Docker container
+                     docker run -d -p 8085:80 --name real-hr itsbijaya/real-hr:latest
+                timeout: 300
+                debug: true
+  
           - name: Test SSH connectivity
             run: ssh -o StrictHostKeyChecking=no ${SECRETS.USERNAME}@${{ secrets.HOST }} exit
+  
