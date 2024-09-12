@@ -13,16 +13,6 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v4
 
-      - name: Verify Server Reachability
-        run: |
-          echo "Checking if the server is reachable on port 22..."
-          nc -zv ${{ secrets.HOST }} 22 || exit 1
-
-      - name: Verify SSH Connectivity
-        run: |
-          echo "Testing SSH connection..."
-          ssh -o StrictHostKeyChecking=no -i ${{ secrets.SSHKEY }} ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'echo "SSH connection successful"' || exit 1
-
       - name: Deploy to Remote Server
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -33,4 +23,3 @@ jobs:
             echo "Deploying application..."
             # Add your deployment commands here
           timeout: 300
-          debug: true
