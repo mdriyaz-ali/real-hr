@@ -41,10 +41,9 @@ jobs:
           - name: Start SSH
             uses: appleboy/ssh-action@v1.0.3
             with:
-                host: ${{ secrets.HOST }}
-                username: ${{ secrets.USERNAME }}
-                password: ${{ secrets.PASSWORD }}
-                port: ${{ secrets.PORT }}
+                host: 192.168.1.99
+                username: itsbijaya
+                port: 22
                 key: ${{ secrets.SSHKEY }}
                 script: "docker pull itsbijaya/real-hr:latest && docker run -d -p 8085:80 --name real-hr itsbijaya/real-hr:latest"
            
