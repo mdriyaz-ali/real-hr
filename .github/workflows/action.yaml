@@ -38,30 +38,17 @@ jobs:
               username: ${{ secrets.DOCKER_USERNAME }}
               password: ${{ secrets.DOCKER_PASSWORD }}
 
-          - name: Install SSH key
-            uses: shimataro/ssh-key-action@v2
-            with:
-              key: ${{ secrets.SSHKEY }}
-              known_hosts: ${{ secrets.HOST }}
-              if_key_exists: fail # replace / ignore / fail; optional (defaults to fail)
-          - name: Run Docker 
-            run: rsync -r ./foo/ itsbijaya@192.168.1.99:/home/
 
             
-          - name: Start SSH
+          - name: Deploy to remote server
             uses: appleboy/ssh-action@v1.0.3
             with:
-                host: 192.168.1.99
-                username: itsbijaya
-                port: 22
-                key: ${{ secrets.SSHKEY }}
-                script: "docker pull itsbijaya/real-hr:latest && docker run -d -p 8085:80 --name real-hr itsbijaya/real-hr:latest"
-           
-        # - name: Pull docker image
-        #   run: docker pull itsbijaya/real-hr:latest 
-
-        # - name: Build Docker Image
-        #   run: docker build -t itsbijaya/real-hr:latest .
-
-        # - name: Build Docker Image
-        #   run: docker run -d -p 8085:80 --name real-hr itsbijaya/real-hr:latest 
+              host: ${{ secrets.HOST }}
+              username: ${{ secrets.USERNAME }}
+              key: ${{ secrets.SSHKEY }}
+              script: |
+                # Pull the Docker image
+                docker pull itsbijaya/real-hr:latest
+                
+                # Run the Docker container
+                docker run -d -p 8085:80 --name real-hr itsbijaya/real-hr:latest
