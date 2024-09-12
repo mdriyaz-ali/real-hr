@@ -38,17 +38,13 @@ jobs:
               username: ${{ secrets.DOCKER_USERNAME }}
               password: ${{ secrets.DOCKER_PASSWORD }}
 
-
-            
-          - name: Deploy to remote server
-            uses: appleboy/ssh-action@v1.0.3
+          - name: Install SSH key
+            uses: shimataro/ssh-key-action@v2
             with:
-              host: ${{ secrets.HOST }}
-              username: ${{ secrets.USERNAME }}
               key: ${{ secrets.SSHKEY }}
-              script: |
-                # Pull the Docker image
-                docker pull itsbijaya/real-hr:latest
-                
-                # Run the Docker container
-                docker run -d -p 8085:80 --name real-hr itsbijaya/real-hr:latest
+              known_hosts: ${{ secrets.HOST }}
+              if_key_exists: fail # replace / ignore / fail; optional (defaults to fail)
+          - name: whoami
+            run: whoami
+
+   
