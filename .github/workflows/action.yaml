@@ -1,64 +1,61 @@
 name: Build Docker Image and Push
 
 on:
-    
   push: 
     branches: ['main']
-
   workflow_dispatch:
 
-
-
 jobs:
-       build:
-        runs-on: ubuntu-latest
+  build:
+    runs-on: ubuntu-latest
 
-        steps:
-          - name: Check out the repo
-            uses: actions/checkout@v4
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
 
-          - name: Set up Node.js
-            uses: actions/setup-node@v3
-            with:
-                node-version: '20'
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
 
-          - name: Install dependencies
-            run: npm install
+      - name: Install dependencies
+        run: npm install
 
-          - name: Build Vitepress
-            run: npm run docs:build
+      - name: Build Vitepress
+        run: npm run docs:build
 
-          - name: Build & push Docker image
-            uses: mr-smithers-excellent/docker-build-push@v6
-            with:
-              image: itsbijaya/real-hr
-              tags: latest
-              registry: docker.io
-              dockerfile: Dockerfile
-              username: ${{ secrets.DOCKER_USERNAME }}
-              password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Build & push Docker image
+        uses: mr-smithers-excellent/docker-build-push@v6
+        with:
+          image: itsbijaya/real-hr
+          tags: latest
+          registry: docker.io
+          dockerfile: Dockerfile
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-          - name: Verify SSH connection
-            run: |
-                   ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} exit
+      - name: Check SSH connectivity
+        run: |
+          echo "Checking if the server is reachable on port 22..."
+          nc -zv ${{ secrets.HOST }} 22 || exit 1
+          echo "Testing SSH connection..."
+          ssh -o StrictHostKeyChecking=no -i ${{ secrets.SSHKEY }} ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'echo "SSH connection successful"' || exit 1
 
-  
-              
-          - name: Deploy to remote server
-            uses: appleboy/ssh-action@v1.0.3
-            with:
-                host: ${{ secrets.HOST }}
-                username: ${{ secrets.USERNAME }}
-                key: ${{ secrets.SSHKEY }}
-                script: |
-                     # Pull the Docker image
-                     docker pull itsbijaya/real-hr:latest
-              
-                     # Run the Docker container
-                     docker run -d -p 8085:80 --name real-hr itsbijaya/real-hr:latest
-                timeout: 300
-                debug: true
-  
-          - name: Test SSH connectivity
-            run: ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} exit
-  
+      - name: Deploy to remote server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSHKEY }}
+          script: |
+            # Pull the Docker image
+            docker pull itsbijaya/real-hr:latest
+
+            # Run the Docker container
+            docker run -d -p 8085:80 --name real-hr itsbijaya/real-hr:latest
+          timeout: 300
+          debug: true
+
+      - name: Test SSH connectivity
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ${{ secrets.SSHKEY }} ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'echo "SSH connection successful"' || exit 1
