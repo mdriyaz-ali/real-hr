@@ -13,28 +13,24 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v4
 
-      - name: Verify SSH connectivity
+      - name: Verify Server Reachability
         run: |
           echo "Checking if the server is reachable on port 22..."
           nc -zv ${{ secrets.HOST }} 22 || exit 1
+
+      - name: Verify SSH Connectivity
+        run: |
           echo "Testing SSH connection..."
           ssh -o StrictHostKeyChecking=no -i ${{ secrets.SSHKEY }} ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'echo "SSH connection successful"' || exit 1
 
-      - name: Deploy to remote server
+      - name: Deploy to Remote Server
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSHKEY }}
           script: |
-            # Add your deployment script here
-            # For example, pulling latest changes and restarting services
             echo "Deploying application..."
-            # Example command, replace with your actual deployment commands
-            # cd /path/to/your/app && git pull origin main && systemctl restart your-service
+            # Add your deployment commands here
           timeout: 300
           debug: true
-
-      - name: Test SSH connectivity
-        run: |
-          ssh -o StrictHostKeyChecking=no -i ${{ secrets.SSHKEY }} ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'echo "SSH connection successful"' || exit 1
