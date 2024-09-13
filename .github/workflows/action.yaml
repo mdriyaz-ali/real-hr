@@ -13,13 +13,12 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v4
 
-      - name: Test SSH Connectivity
-        uses: appleboy/ssh-action@v1.0.3
+      - id: ssh
+        uses: invi5H/ssh-action@v1
         with:
-          host: ${{ secrets.HOST }}  # Use the public IP here
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.SSHKEY }}
-          script: |
-            echo "SSH connection successful"
-            # Optionally, run other commands to further test the connection
-          debug: true
+          SSH_HOST: ${{ secrets.HOST }}
+          SSH_PORT: ${{ secrets.PORT }}
+          SSH_USER: ${{ secrets.USERNAME }}
+          SSH_KEY: ${{ secrets.SSHKEY }}
+
+      - run: ssh ${{ steps.ssh.outputs.SERVER }} 'echo "SSH connection successful"'
