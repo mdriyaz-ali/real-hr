@@ -10,18 +10,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Set up SSH
-        run: |
-          # Create SSH directory
-          mkdir -p ~/.ssh
+      - name: Check out the repo
+        uses: actions/checkout@v4
 
-          # Write the SSH private key to the id_rsa file
-          echo "${{ secrets.SSHKEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-
-          # Add the SSH host key to known_hosts
-          ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
-
-      - name: Test SSH Connection
-        run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'echo "SSH connection successful"'
+      - name: Test SSH Connectivity
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSHKEY }}
+          script: |
+            echo "SSH connection successful"
+            # You can add other commands here to further test the connection
