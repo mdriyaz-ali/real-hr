@@ -17,27 +17,13 @@ jobs:
         run: |
           mkdir -p ~/.ssh
           
-          # Output debugging information
-          echo "SSH_HOST: '${{ secrets.HOST }}'"
-          echo "SSH_USER: '${{ secrets.USERNAME }}'"
-
           # Write the SSH key to the id_rsa file
           echo "${{ secrets.SSHKEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
 
-          # Ensure SSH_HOST is not empty
-          if [ -z "${{ secrets.HOST }}" ]; then
-            echo "Error: SSH_HOST is not set"
-            exit 1
-          fi
-
           # Add the SSH host key to known_hosts
           ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
 
-          # Test the SSH connection
-          ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'echo "SSH connection successful"'
-
-      - name: Check SSH name
+      - name: Test SSH Connection
         run: |
-          NAME=$(echo "server" | iconv -t ascii//TRANSLIT | sed -E 's/[^a-zA-Z0-9]+/-/g' | sed -E 's/^-+|-+$//g' | tr A-Z a-z)
-          echo "Server name: $NAME"
+          ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'echo "SSH connection successful"'
