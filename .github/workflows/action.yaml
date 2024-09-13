@@ -10,14 +10,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check out the repo
-        uses: actions/checkout@v4
-
       - name: Set up SSH
         run: |
+          # Create SSH directory
           mkdir -p ~/.ssh
-          
-          # Write the SSH key to the id_rsa file
+
+          # Write the SSH private key to the id_rsa file
           echo "${{ secrets.SSHKEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
 
