@@ -1,24 +1,16 @@
-name: Test SSH Connectivity
-
-on:
-  push:
-    branches: ['main']
-  workflow_dispatch:
-
+name: remote ssh command
+on: [push]
 jobs:
-  test-ssh:
+
+  build:
+    name: Build
     runs-on: ubuntu-latest
-
     steps:
-      - name: Check out the repo
-        uses: actions/checkout@v4
-
-      - name: Test SSH Connectivity
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.SSHKEY }}
-          script: |
-            echo "SSH connection successful"
-            # You can add other commands here to further test the connection
+    - name: executing remote ssh commands using password
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        port: ${{ secrets.PORT }}
+        script: whoami
